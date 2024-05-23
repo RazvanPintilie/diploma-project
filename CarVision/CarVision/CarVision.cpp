@@ -4,12 +4,13 @@
 #include <opencv2/objdetect.hpp>
 #include <iostream>
 #include <string>
+#include <opencv2/opencv.hpp>
 
 #include "functions.hpp"
 
 
-int main() {
-
+int main()
+{
 	std::string videoPath = "resources/pedestrians/by_me_videos/tudor_pedestrians_rec_1_cut.mp4";
 	std::string folderPath = "resources/pedestrians/by_me_images/";
 
@@ -27,7 +28,7 @@ int main() {
 		cv::imshow(windowName, processedImage);
 	}
 
-	// PlayVideo(videoPath, HD);
+	PlayVideo(videoPath, HD);
 
 	cv::waitKey(0);
 	return 0;

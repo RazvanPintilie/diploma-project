@@ -1,5 +1,10 @@
 #pragma once
 #include <opencv2/opencv.hpp>
+#include <opencv2/cudaarithm.hpp>
+#include <opencv2/cudaimgproc.hpp>
+#include <opencv2/cudawarping.hpp>
+#include <opencv2/cudacodec.hpp>
+#include <opencv2/cudaobjdetect.hpp>
 #include <iostream>
 #include <string>
 
