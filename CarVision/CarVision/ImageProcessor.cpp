@@ -25,7 +25,7 @@ std::vector<cv::Mat> ImageProcessor::GetImagesFromFolder(const std::string& fold
 cv::Mat ImageProcessor::ProcessImage(const cv::Mat& img, ResolutionType resolution)
 {
 	auto resolutionMap = ResolutionManager::CreateResolutionsMap();
-	cv::Size newSize(std::get<0>(resolutionMap[resolution]), std::get<1>(resolutionMap[resolution]));
+	cv::Size newSize(resolutionMap[resolution]);
 	std::vector<cv::Rect> bodies;
 	cv::cuda::GpuMat gpuImg, grayImg;
 

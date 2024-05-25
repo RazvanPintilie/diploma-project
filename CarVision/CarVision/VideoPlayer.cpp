@@ -1,7 +1,7 @@
 #include "VideoPlayer.hpp"
 
 VideoPlayer::VideoPlayer(const std::string& videoPath, ResolutionType resolution, ImageProcessor imageProcessor)
-	: videoPath(videoPath), resolution(resolution), imageProcessor(imageProcessor){}
+    : videoPath(videoPath), resolution(resolution), imageProcessor(imageProcessor) {}
 
 int VideoPlayer::PlayVideo()
 {

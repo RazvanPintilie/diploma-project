@@ -5,7 +5,7 @@
 #include <opencv2/cudaobjdetect.hpp>
 #include "ResolutionManager.hpp"
 
-class ImageProcessor 
+class ImageProcessor
 {
 public:
     cv::Mat ProcessImage(const cv::Mat& img, ResolutionType resolution);

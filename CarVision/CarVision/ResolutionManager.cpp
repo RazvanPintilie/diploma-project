@@ -1,12 +1,12 @@
 #include "ResolutionManager.hpp"
 
-std::map<ResolutionType, Resolution> ResolutionManager::CreateResolutionsMap() 
+std::map<ResolutionType, cv::Size> ResolutionManager::CreateResolutionsMap()
 {
-    std::map<ResolutionType, Resolution> resolutionMap;
+    std::map<ResolutionType, cv::Size> resolutionMap;
 
-    resolutionMap[ResolutionType::FHD] = std::make_tuple(1920, 1080);
-    resolutionMap[ResolutionType::HD] = std::make_tuple(1280, 720);
-    resolutionMap[ResolutionType::SVGA] = std::make_tuple(800, 600);
+    resolutionMap[ResolutionType::FHD] = cv::Size(1920, 1080);
+    resolutionMap[ResolutionType::HD] = cv::Size(1290, 720);
+    resolutionMap[ResolutionType::SVGA] = cv::Size(800, 600);
 
     return resolutionMap;
 }
