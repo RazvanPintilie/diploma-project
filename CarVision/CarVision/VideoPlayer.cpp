@@ -10,6 +10,7 @@ int VideoPlayer::PlayVideo()
 
     // open video 
     cap.open(this->videoPath);
+    // cap.open(1);
 
     // check if we succeeded
     if (!cap.isOpened())
@@ -33,7 +34,7 @@ int VideoPlayer::PlayVideo()
         processedFrame = this->imageProcessor.ProcessImage(frame, this->resolution);
 
         // show live and wait for a key with timeout long enough to show images
-        imshow("Live", processedFrame);
+        cv::imshow("Live", processedFrame);
         if (cv::waitKey(1) >= 0)
         {
             break;

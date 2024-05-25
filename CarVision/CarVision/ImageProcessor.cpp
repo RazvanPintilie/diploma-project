@@ -30,10 +30,17 @@ cv::Mat ImageProcessor::ProcessImage(const cv::Mat& img, ResolutionType resoluti
 	cv::cuda::GpuMat gpuImg, grayImg;
 
 	// Resize the image to desired resolution
-	cv::resize(img, img, newSize);
+	cv::Mat resizedImg;
+	cv::resize(img, resizedImg, newSize);
+
+	if (resizedImg.empty())
+	{
+		std::cout << "ERROR! Resized image is empty\n";
+		return img;
+	}
 
 	// Upload image to GPU
-	gpuImg.upload(img);
+	gpuImg.upload(resizedImg);
 
 	// Convert image to grayscale on GPU
 	cv::cuda::cvtColor(gpuImg, grayImg, cv::COLOR_BGR2GRAY);
@@ -52,8 +59,16 @@ cv::Mat ImageProcessor::ProcessImage(const cv::Mat& img, ResolutionType resoluti
 	// Draw rectangles around detected people
 	for (const auto& rect : bodies)
 	{
-		cv::rectangle(img, rect.tl(), rect.br(), cv::Scalar(255, 0, 255), 2);
+		cv::Scalar color(255, 0, 255);
+		DrawRectangle(resizedImg, rect, color);
 	}
+
+	return resizedImg;
+}
+
+cv::Mat ImageProcessor::DrawRectangle(cv::Mat img, cv::Rect rect, cv::Scalar color)
+{
+	cv::rectangle(img, rect.tl(), rect.br(), color, 2);
 
 	return img;
 }
