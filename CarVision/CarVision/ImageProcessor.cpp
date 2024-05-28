@@ -1,16 +1,29 @@
 #include "ImageProcessor.hpp"
 #include <opencv2/opencv.hpp>
 
+ImageProcessor::ImageProcessor(NeuralNetwork& neuralNetwork): neuralNetwork(neuralNetwork) {}
+
 std::vector<cv::Mat> ImageProcessor::GetImagesFromFolder(const std::string& folderPath)
 {
 	std::vector<cv::String> imagePaths;
 	std::vector<cv::Mat> images;
 
-	cv::glob(folderPath + "*.jpg", imagePaths);
+	// List of extensions to search for
+	std::vector<std::string> extensions = { "*.jpg", "*.jpeg", "*.png", "*.bmp", "*.tiff", "*.webp" };
 
+	// Iterate over each extension and gather image paths
+	for (const auto& ext : extensions)
+	{
+		std::vector<cv::String> tempPaths;
+		cv::glob(folderPath + ext, tempPaths);
+		imagePaths.insert(imagePaths.end(), tempPaths.begin(), tempPaths.end());
+	}
+
+	// Check if any images were found
 	if (imagePaths.empty())
 	{
 		std::cout << "No images found in folder: " << folderPath << std::endl;
+		return images; // Return an empty vector if no images were found
 	}
 
 	for (const auto& imgPath : imagePaths)
@@ -24,6 +37,9 @@ std::vector<cv::Mat> ImageProcessor::GetImagesFromFolder(const std::string& fold
 
 cv::Mat ImageProcessor::ProcessImage(const cv::Mat& img, ResolutionType resolution)
 {
+	//static int i = 376;
+	//cv::imwrite("resources/output/train_image_" + std::to_string(i++) + ".jpg", img);
+
 	auto resolutionMap = ResolutionManager::CreateResolutionsMap();
 	cv::Size newSize(resolutionMap[resolution]);
 	std::vector<cv::Rect> bodies;
@@ -72,3 +88,33 @@ cv::Mat ImageProcessor::DrawRectangle(cv::Mat img, cv::Rect rect, cv::Scalar col
 
 	return img;
 }
+
+//cv::Mat ImageProcessor::ProcessImage(const cv::Mat& img, ResolutionType resolution)
+//{
+//	auto resolutionMap = ResolutionManager::CreateResolutionsMap();
+//	cv::Size newSize(resolutionMap[resolution]);
+//	std::vector<cv::Rect> bodies;
+//	cv::cuda::GpuMat gpuImg, grayImg;
+//
+//	// Resize the image to desired resolution
+//	cv::Mat resizedImg;
+//	cv::resize(img, resizedImg, newSize);
+//
+//	if (resizedImg.empty())
+//	{
+//		std::cout << "ERROR! Resized image is empty\n";
+//		return img;
+//	}
+//
+//	// Predict using the neural network
+//	std::vector<float> prediction = neuralNetwork.Predict(resizedImg);
+//
+//	// Draw rectangles around detected people (example logic)
+//	for (const auto& rect : bodies)
+//	{
+//		cv::Scalar color(255, 0, 255);
+//		DrawRectangle(resizedImg, rect, color);
+//	}
+//
+//	return resizedImg;
+//}
