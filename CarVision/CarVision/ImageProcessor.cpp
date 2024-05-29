@@ -1,7 +1,7 @@
 #include "ImageProcessor.hpp"
 #include <opencv2/opencv.hpp>
 
-ImageProcessor::ImageProcessor(NeuralNetwork& neuralNetwork): neuralNetwork(neuralNetwork) {}
+ImageProcessor::ImageProcessor(NeuralNetwork& neuralNetwork) : neuralNetwork(neuralNetwork) {}
 
 std::vector<cv::Mat> ImageProcessor::GetImagesFromFolder(const std::string& folderPath)
 {
@@ -37,8 +37,8 @@ std::vector<cv::Mat> ImageProcessor::GetImagesFromFolder(const std::string& fold
 
 cv::Mat ImageProcessor::ProcessImage(const cv::Mat& img, ResolutionType resolution)
 {
-	//static int i = 376;
-	//cv::imwrite("resources/output/train_image_" + std::to_string(i++) + ".jpg", img);
+	/*static int i = 0;
+	cv::imwrite("resources/output/img" + std::to_string(i++) + ".jpg", img);*/
 
 	auto resolutionMap = ResolutionManager::CreateResolutionsMap();
 	cv::Size newSize(resolutionMap[resolution]);
@@ -75,6 +75,7 @@ cv::Mat ImageProcessor::ProcessImage(const cv::Mat& img, ResolutionType resoluti
 	// Draw rectangles around detected people
 	for (const auto& rect : bodies)
 	{
+		// b g r color
 		cv::Scalar color(255, 0, 255);
 		DrawRectangle(resizedImg, rect, color);
 	}

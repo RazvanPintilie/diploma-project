@@ -5,10 +5,12 @@ int main()
 {
 	// cv::cuda::printCudaDeviceInfo(0);
 
-	std::string videoPath = "resources/videos/tudor_pedestrians_rec_1_cut.mp4";
-	// std::string videoPath = "http://192.168.1.101:8080/video"; // Replace with smartphone's IP camera URL
-	// std::string videoPath = "http://192.168.159.107:8080/video"; // Replace with smartphone's IP camera URL
+	std::string videoPath;
 	std::string iamgesFolderPath = "resources/dataset/images/test/";
+	// iamgesFolderPath = "resourceS/temp/";
+	videoPath = "resources/videos/tudor_pedestrians_rec_1_cut.mp4";
+	// videoPath = "http://192.168.1.100:8080/video"; // Replace with smartphone's IP camera URL
+	// videoPath = "http://192.168.159.107:8080/video"; // Replace with smartphone's IP camera URL
 
 	int numEpochs = 10; // Define the number of epochs
 	float learningRate = 0.001f; // Define the learning rate
