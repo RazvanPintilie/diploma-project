@@ -1,6 +1,6 @@
-#include "VideoPlayer.hpp"
-#include "ImageProcessor.hpp"
-#include "CocoJsonParser.hpp"
+#include "../inc/VideoPlayer.hpp"
+#include "../inc/ImageProcessor.hpp"
+#include "../inc/CocoJsonParser.hpp"
 
 int main()
 {

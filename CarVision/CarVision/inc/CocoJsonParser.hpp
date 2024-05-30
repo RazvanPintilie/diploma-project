@@ -1,7 +1,7 @@
 #pragma once
 #include <string>
 #include <vector>
-#include <nlohmann/json.hpp>
+#include <nlohmann/json.hpp> // from https://github.com/nlohmann/json
 
 // Define structures to hold image and annotation information
 struct BBoxElement

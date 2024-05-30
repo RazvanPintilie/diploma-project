@@ -1,4 +1,4 @@
-#include "ImageProcessor.hpp"
+#include "../inc/ImageProcessor.hpp"
 #include <opencv2/opencv.hpp>
 
 ImageProcessor::ImageProcessor(NeuralNetwork& neuralNetwork) : neuralNetwork(neuralNetwork) {}

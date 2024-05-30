@@ -1,7 +1,7 @@
 #pragma once
 #include <opencv2/opencv.hpp>
-#include "ImageProcessor.hpp"
-#include "ResolutionManager.hpp"
+#include "../inc/ImageProcessor.hpp"
+#include "../inc/ResolutionManager.hpp"
 
 class VideoPlayer
 {

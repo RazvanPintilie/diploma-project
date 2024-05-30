@@ -1,4 +1,4 @@
-#include "VideoPlayer.hpp"
+#include "../inc/VideoPlayer.hpp"
 
 VideoPlayer::VideoPlayer(const std::string& videoPath, ResolutionType resolution, ImageProcessor imageProcessor)
 	: videoPath(videoPath), resolution(resolution), imageProcessor(imageProcessor) {}
@@ -32,15 +32,15 @@ int VideoPlayer::PlayVideo()
 			break;
 		}
 
-		// process only 1/3 of the frames
-		if ((framesCounter++) % 3 == 0)
+		// process only 1/2 of the frames
+		if ((framesCounter++) % 2 == 0)
 		{
 			processedFrame = this->imageProcessor.ProcessImage(frame, this->resolution);
 		}
 
 		// show live and wait for a key with timeout long enough to show images
 		cv::imshow("Live", processedFrame);
-		if (cv::waitKey(3) >= 0)
+		if (cv::waitKey(1) >= 0)
 		{
 			break;
 		}

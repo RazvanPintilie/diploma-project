@@ -1,4 +1,4 @@
-#include "ResolutionManager.hpp"
+#include "../inc/ResolutionManager.hpp"
 
 std::map<ResolutionType, cv::Size> ResolutionManager::CreateResolutionsMap()
 {

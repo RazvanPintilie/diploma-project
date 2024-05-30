@@ -1,4 +1,4 @@
-#include "NeuralNetwork.hpp"
+#include "../inc/NeuralNetwork.hpp"
 #include <opencv2/opencv.hpp>
 #include <iostream>
 

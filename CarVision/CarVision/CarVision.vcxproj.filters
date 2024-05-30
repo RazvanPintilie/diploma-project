@@ -15,39 +15,39 @@
     </Filter>
   </ItemGroup>
   <ItemGroup>
-    <ClCompile Include="CarVision.cpp">
+    <ClCompile Include="src\CarVision.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="ResolutionManager.cpp">
+    <ClCompile Include="src\ImageProcessor.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
-    <ClCompile Include="ImageProcessor.cpp">
+    <ClCompile Include="src\NeuralNetwork.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
-    <ClCompile Include="VideoPlayer.cpp">
+    <ClCompile Include="src\ResolutionManager.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
-    <ClCompile Include="NeuralNetwork.cpp">
+    <ClCompile Include="src\VideoPlayer.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
-    <ClCompile Include="CocoJsonParser.cpp">
+    <ClCompile Include="src\CocoJsonParser.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="ResolutionManager.hpp">
+    <ClInclude Include="inc\ImageProcessor.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="ImageProcessor.hpp">
+    <ClInclude Include="inc\NeuralNetwork.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="VideoPlayer.hpp">
+    <ClInclude Include="inc\ResolutionManager.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="NeuralNetwork.hpp">
+    <ClInclude Include="inc\VideoPlayer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="CocoJsonParser.hpp">
+    <ClInclude Include="inc\CocoJsonParser.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

@@ -1,4 +1,4 @@
-#include "CocoJsonParser.hpp"
+#include "../inc/CocoJsonParser.hpp"
 #include <fstream>
 #include <iostream>
 
