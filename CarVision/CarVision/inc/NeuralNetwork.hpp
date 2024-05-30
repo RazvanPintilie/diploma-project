@@ -3,6 +3,7 @@
 #include <string>
 #include <cuda_runtime.h>
 #include <cudnn.h>
+#include "../inc/CocoJsonParser.hpp"
 
 class NeuralNetwork
 {
@@ -10,7 +11,7 @@ public:
 	NeuralNetwork(int numEpochs, float learningRate, int batchSize);
 	~NeuralNetwork();
 
-	void Train(const std::vector<std::string>& imagePaths, const std::vector<int>& labels);
+	void Train(const CocoJsonParser& cocoParser);
 	std::vector<float> Predict(const std::string& imagePath);
 
 private:

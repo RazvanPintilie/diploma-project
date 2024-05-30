@@ -1,6 +1,7 @@
-#include "../inc/CocoJsonParser.hpp"
-#include <fstream>
 #include <iostream>
+#include <fstream>
+#include "../inc/CocoJsonParser.hpp"
+
 
 void CocoJsonParser::ParseJson(const std::string& filename)
 {
@@ -35,4 +36,16 @@ void CocoJsonParser::ParseJson(const std::string& filename)
 		annotation.bbox.height = ann["bbox"][3];
 		annotations.push_back(annotation);
 	}
+}
+
+std::string CocoJsonParser::GetImageFilePath(int imageId) const
+{
+	for (const auto& img : images)
+	{
+		if (img.id == imageId)
+		{
+			return img.fileName;
+		}
+	}
+	return ""; // Return empty string if image ID is not found
 }

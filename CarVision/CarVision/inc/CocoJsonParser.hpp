@@ -35,6 +35,8 @@ public:
 
     const std::vector<AnnotationElement>& GetAnnotations() const { return annotations; }
 
+    std::string GetImageFilePath(int imageId) const;
+
 private:
     std::vector<ImageElement> images;
     std::vector<AnnotationElement> annotations;
