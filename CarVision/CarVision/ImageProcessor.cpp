@@ -76,7 +76,14 @@ cv::Mat ImageProcessor::ProcessImage(const cv::Mat& img, ResolutionType resoluti
 	for (const auto& rect : bodies)
 	{
 		// b g r color
-		cv::Scalar color(255, 0, 255);
+		cv::Scalar magenta(255, 0, 255);
+		cv::Scalar yellow(0, 255, 255);
+		cv::Scalar green(0, 255, 0);
+		cv::Scalar red(0, 0, 255);
+
+		auto color = yellow;
+
+
 		DrawRectangle(resizedImg, rect, color);
 	}
 

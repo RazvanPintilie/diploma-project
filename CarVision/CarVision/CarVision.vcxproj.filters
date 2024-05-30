@@ -30,6 +30,9 @@
     <ClCompile Include="NeuralNetwork.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
+    <ClCompile Include="CocoJsonParser.cpp">
+      <Filter>Resource Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="ResolutionManager.hpp">
@@ -42,6 +45,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="NeuralNetwork.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="CocoJsonParser.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

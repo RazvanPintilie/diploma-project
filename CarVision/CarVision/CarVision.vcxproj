@@ -139,6 +139,7 @@
       <SDLCheck>true</SDLCheck>
       <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
+      <AdditionalIncludeDirectories>C:\OpenCvWithCuda\nlohmann-json\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
@@ -150,12 +151,14 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="CarVision.cpp" />
+    <ClCompile Include="CocoJsonParser.cpp" />
     <ClCompile Include="ImageProcessor.cpp" />
     <ClCompile Include="NeuralNetwork.cpp" />
     <ClCompile Include="ResolutionManager.cpp" />
     <ClCompile Include="VideoPlayer.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="CocoJsonParser.hpp" />
     <ClInclude Include="ImageProcessor.hpp" />
     <ClInclude Include="NeuralNetwork.hpp" />
     <ClInclude Include="ResolutionManager.hpp" />
