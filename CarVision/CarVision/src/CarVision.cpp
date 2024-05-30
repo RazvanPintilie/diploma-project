@@ -35,9 +35,6 @@ int main()
 	VideoPlayer videoPlayer(videoPath, ResolutionType::HD, imageProcessor);
 	videoPlayer.PlayVideo();
 
-	cv::waitKey(0);
-	cv::destroyAllWindows();
-
 
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -64,6 +61,11 @@ int main()
 	//		<< ", BBox: [" << annotation.bbox.x << ", " << annotation.bbox.y << ", " << annotation.bbox.width << ", " << annotation.bbox.height << "]\n";
 	//}
 
+
+	// exit the app
+
+	cv::waitKey(0);
+	cv::destroyAllWindows();
 
 	return 0;
 }
