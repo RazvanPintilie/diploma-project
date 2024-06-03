@@ -1,7 +1,40 @@
 #include "../inc/ImageProcessor.hpp"
+#include <fstream>
+#include <sstream>
 #include <opencv2/opencv.hpp>
+#include <fstream>
 
-ImageProcessor::ImageProcessor(NeuralNetwork& neuralNetwork) : neuralNetwork(neuralNetwork) {}
+std::vector<BBoxElement> ImageProcessor::RoboflowPredict(const cv::Mat& img)
+{
+	std::string imagePath = "resources/output/temp-img.jpg";
+	std::string predictionOutput = "resources/output/predictions.json";
+	cv::imwrite(imagePath, img);
+
+	std::ofstream file;
+	file.open("DeployRoboflowModel.ps1");
+
+	std::string powershell = R"([System.Convert]::ToBase64String([System.IO.File]::ReadAllBytes(")" + imagePath + R"(")) | Out-File -Encoding ASCII -FilePath encoded_image.txt ; curl.exe -d @$PWD\encoded_image.txt "https://detect.roboflow.com/carvision-7imcs/2?api_key=waYDB2KU5ky1eK8Vid0O" | Out-File -Encoding ASCII -FilePath ")" + predictionOutput + R"(" ; Remove-Item encoded_image.txt)";
+
+	file << powershell << std::endl;
+	file.close();
+
+	system("powershell -ExecutionPolicy Bypass -F DeployRoboflowModel.ps1");
+
+	remove("DeployRoboflowModel.ps1");
+
+	return ParsePredictions(predictionOutput);
+}
+
+std::vector<BBoxElement> ImageProcessor::ParsePredictions(const std::string& predictionOutput)
+{
+	std::vector<BBoxElement> predictions;
+
+	JsonParser parser;
+	parser.ParseJson(predictionOutput);
+	predictions = parser.GetPredictions();
+
+	return predictions;
+}
 
 std::vector<cv::Mat> ImageProcessor::GetImagesFromFolder(const std::string& folderPath)
 {
@@ -35,7 +68,7 @@ std::vector<cv::Mat> ImageProcessor::GetImagesFromFolder(const std::string& fold
 	return images;
 }
 
-cv::Mat ImageProcessor::ProcessImage(const cv::Mat& img, ResolutionType resolution)
+cv::Mat ImageProcessor::ProcessImage(const cv::Mat& img, ResolutionType resolution, bool process)
 {
 	/*static int i = 0;
 	cv::imwrite("resources/output/img" + std::to_string(i++) + ".jpg", img);*/
@@ -46,45 +79,66 @@ cv::Mat ImageProcessor::ProcessImage(const cv::Mat& img, ResolutionType resoluti
 	cv::cuda::GpuMat gpuImg, grayImg;
 
 	// Resize the image to desired resolution
-	cv::Mat resizedImg;
-	cv::resize(img, resizedImg, newSize);
-
-	if (resizedImg.empty())
+	static cv::Mat resizedImg;
+	if (process == true)
 	{
-		std::cout << "ERROR! Resized image is empty\n";
-		return img;
-	}
+		cv::resize(img, resizedImg, newSize);
 
-	// Upload image to GPU
-	gpuImg.upload(resizedImg);
-
-	// Convert image to grayscale on GPU
-	cv::cuda::cvtColor(gpuImg, grayImg, cv::COLOR_BGR2GRAY);
-
-	// HOG descriptor with default people detector
-	cv::Ptr<cv::cuda::HOG> hog = cv::cuda::HOG::create();
-	hog->setSVMDetector(hog->getDefaultPeopleDetector());
-
-	// Detect people in the image
-	hog->detectMultiScale(grayImg, bodies);
-
-	// Download processed image back to CPU
-	cv::Mat processedImg;
-	grayImg.download(processedImg);
-
-	// Draw rectangles around detected people
-	for (const auto& rect : bodies)
-	{
-		// b g r color
-		cv::Scalar magenta(255, 0, 255);
-		cv::Scalar yellow(0, 255, 255);
-		cv::Scalar green(0, 255, 0);
-		cv::Scalar red(0, 0, 255);
-
-		auto color = yellow;
+		if (resizedImg.empty())
+		{
+			std::cout << "ERROR! Resized image is empty\n";
+			return img;
+		}
 
 
-		DrawRectangle(resizedImg, rect, color);
+		// Upload image to GPU
+		gpuImg.upload(resizedImg);
+
+		// Convert image to grayscale on GPU
+		cv::cuda::cvtColor(gpuImg, grayImg, cv::COLOR_BGR2GRAY);
+
+		// HOG descriptor with default people detector
+		//cv::Ptr<cv::cuda::HOG> hog = cv::cuda::HOG::create();
+		//hog->setSVMDetector(hog->getDefaultPeopleDetector());
+
+		//// Detect people in the image
+		//hog->detectMultiScale(grayImg, bodies);
+
+		// Draw rectangles around detected people
+		//for (const auto& rect : bodies)
+		//{
+		//	// b g r color
+		//	cv::Scalar magenta(255, 0, 255);
+		//	cv::Scalar yellow(0, 255, 255);
+		//	cv::Scalar green(0, 255, 0);
+		//	cv::Scalar red(0, 0, 255);
+
+		//	auto color = yellow;
+
+
+		//	DrawRectangle(resizedImg, rect, color);
+		//}
+
+		auto bBoxElements = RoboflowPredict(resizedImg);
+
+		for (const auto& elem : bBoxElements)
+		{
+			// b g r color
+			cv::Scalar magenta(255, 0, 255);
+			cv::Scalar yellow(0, 255, 255);
+			cv::Scalar green(0, 255, 0);
+			cv::Scalar red(0, 0, 255);
+
+			auto color = yellow;
+
+			cv::Rect rect = cv::Rect(elem.x - elem.width / 2, elem.y - elem.height / 2, elem.width, elem.height);
+
+			DrawRectangle(resizedImg, rect, color);
+		}
+
+		// Download processed image back to CPU
+		cv::Mat processedImg;
+		grayImg.download(processedImg);
 	}
 
 	return resizedImg;

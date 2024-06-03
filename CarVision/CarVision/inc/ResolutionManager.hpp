@@ -3,7 +3,7 @@
 #include <tuple>
 #include <opencv2/opencv.hpp>
 
-enum class ResolutionType { FHD, HD, SVGA };
+enum class ResolutionType { FHD, HD, nHD, SVGA };
 
 class ResolutionManager
 {

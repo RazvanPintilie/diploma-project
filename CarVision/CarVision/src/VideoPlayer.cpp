@@ -32,11 +32,18 @@ int VideoPlayer::PlayVideo()
 			break;
 		}
 
-		// process only 1/2 of the frames
-		if ((framesCounter++) % 2 == 0)
+		bool process = true;
+		// process only 1/3 of the frames
+		if ((framesCounter++) % 3 == 0)
 		{
-			processedFrame = this->imageProcessor.ProcessImage(frame, this->resolution);
+			process = true;
 		}
+		else
+		{
+			process = false;
+		}
+
+		processedFrame = this->imageProcessor.ProcessImage(frame, this->resolution, process);
 
 		// show live and wait for a key with timeout long enough to show images
 		cv::imshow("Live", processedFrame);

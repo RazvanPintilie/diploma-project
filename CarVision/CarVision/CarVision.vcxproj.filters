@@ -21,24 +21,18 @@
     <ClCompile Include="src\ImageProcessor.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\NeuralNetwork.cpp">
-      <Filter>Resource Files</Filter>
-    </ClCompile>
     <ClCompile Include="src\ResolutionManager.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
     <ClCompile Include="src\VideoPlayer.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
-    <ClCompile Include="src\CocoJsonParser.cpp">
+    <ClCompile Include="src\JsonParser.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="inc\ImageProcessor.hpp">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="inc\NeuralNetwork.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="inc\ResolutionManager.hpp">
@@ -47,7 +41,7 @@
     <ClInclude Include="inc\VideoPlayer.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="inc\CocoJsonParser.hpp">
+    <ClInclude Include="inc\JsonParser.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
