@@ -68,7 +68,7 @@ std::vector<cv::Mat> ImageProcessor::GetImagesFromFolder(const std::string& fold
 	return images;
 }
 
-cv::Mat ImageProcessor::ProcessImage(const cv::Mat& img, ResolutionType resolution, bool process)
+cv::Mat ImageProcessor::ProcessImage(const cv::Mat& img, ResolutionType resolution, bool predict)
 {
 	/*static int i = 0;
 	cv::imwrite("resources/output/img" + std::to_string(i++) + ".jpg", img);*/
@@ -79,67 +79,85 @@ cv::Mat ImageProcessor::ProcessImage(const cv::Mat& img, ResolutionType resoluti
 	cv::cuda::GpuMat gpuImg, grayImg;
 
 	// Resize the image to desired resolution
-	static cv::Mat resizedImg;
-	if (process == true)
+	cv::Mat resizedImg;
+	static std::vector<BBoxElement> bBoxElements;
+
+	cv::resize(img, resizedImg, newSize);
+
+	if (resizedImg.empty())
 	{
-		cv::resize(img, resizedImg, newSize);
-
-		if (resizedImg.empty())
-		{
-			std::cout << "ERROR! Resized image is empty\n";
-			return img;
-		}
-
-
-		// Upload image to GPU
-		gpuImg.upload(resizedImg);
-
-		// Convert image to grayscale on GPU
-		cv::cuda::cvtColor(gpuImg, grayImg, cv::COLOR_BGR2GRAY);
-
-		// HOG descriptor with default people detector
-		//cv::Ptr<cv::cuda::HOG> hog = cv::cuda::HOG::create();
-		//hog->setSVMDetector(hog->getDefaultPeopleDetector());
-
-		//// Detect people in the image
-		//hog->detectMultiScale(grayImg, bodies);
-
-		// Draw rectangles around detected people
-		//for (const auto& rect : bodies)
-		//{
-		//	// b g r color
-		//	cv::Scalar magenta(255, 0, 255);
-		//	cv::Scalar yellow(0, 255, 255);
-		//	cv::Scalar green(0, 255, 0);
-		//	cv::Scalar red(0, 0, 255);
-
-		//	auto color = yellow;
-
-
-		//	DrawRectangle(resizedImg, rect, color);
-		//}
-
-		auto bBoxElements = RoboflowPredict(resizedImg);
-
-		for (const auto& elem : bBoxElements)
-		{
-			// b g r color
-			cv::Scalar magenta(255, 0, 255);
-			cv::Scalar yellow(0, 255, 255);
-			cv::Scalar green(0, 255, 0);
-			cv::Scalar red(0, 0, 255);
-
-			auto color = yellow;
-
-			cv::Rect rect = cv::Rect(elem.x - elem.width / 2, elem.y - elem.height / 2, elem.width, elem.height);
-
-			DrawRectangle(resizedImg, rect, color);
-		}
-
-		// Download processed image back to CPU
-		cv::Mat processedImg;
-		grayImg.download(processedImg);
+		std::cout << "ERROR! Resized image is empty\n";
+		return img;
 	}
+
+
+	// Upload image to GPU
+	gpuImg.upload(resizedImg);
+
+	// Convert image to grayscale on GPU
+	cv::cuda::cvtColor(gpuImg, grayImg, cv::COLOR_BGR2GRAY);
+
+	// HOG descriptor with default people detector
+	//cv::Ptr<cv::cuda::HOG> hog = cv::cuda::HOG::create();
+	//hog->setSVMDetector(hog->getDefaultPeopleDetector());
+
+	//// Detect people in the image
+	//hog->detectMultiScale(grayImg, bodies);
+
+	// Draw rectangles around detected people
+	//for (const auto& rect : bodies)
+	//{
+	//	// b g r color
+	//	cv::Scalar magenta(255, 0, 255);
+	//	cv::Scalar yellow(0, 255, 255);
+	//	cv::Scalar green(0, 255, 0);
+	//	cv::Scalar red(0, 0, 255);
+
+	//	auto color = yellow;
+
+
+	//	DrawRectangle(resizedImg, rect, color);
+	//}
+
+	if (predict == true)
+	{
+		bBoxElements = RoboflowPredict(resizedImg);
+	}
+
+	for (const auto& elem : bBoxElements)
+	{
+		// b g r color
+		cv::Scalar gray(128, 128, 128);
+		cv::Scalar yellow(0, 255, 255);
+		cv::Scalar green(0, 255, 0);
+		cv::Scalar red(0, 0, 255);
+
+		auto color = gray;
+
+		if (elem.confidence > 0.25)
+		{
+			color = green;
+		}
+		if (elem.confidence > 0.50)
+		{
+			color = yellow;
+		}
+
+		if (elem.confidence > 0.75)
+		{
+			color = red;
+		}
+
+		cv::Rect rect = cv::Rect(elem.x - elem.width / 2, elem.y - elem.height / 2, elem.width, elem.height);
+
+		DrawRectangle(resizedImg, rect, color);
+
+	}
+
+	// Download processed image back to CPU
+	cv::Mat processedImg;
+	grayImg.download(processedImg);
+
 
 	return resizedImg;
 }
@@ -151,32 +169,3 @@ cv::Mat ImageProcessor::DrawRectangle(cv::Mat img, cv::Rect rect, cv::Scalar col
 	return img;
 }
 
-//cv::Mat ImageProcessor::ProcessImage(const cv::Mat& img, ResolutionType resolution)
-//{
-//	auto resolutionMap = ResolutionManager::CreateResolutionsMap();
-//	cv::Size newSize(resolutionMap[resolution]);
-//	std::vector<cv::Rect> bodies;
-//	cv::cuda::GpuMat gpuImg, grayImg;
-//
-//	// Resize the image to desired resolution
-//	cv::Mat resizedImg;
-//	cv::resize(img, resizedImg, newSize);
-//
-//	if (resizedImg.empty())
-//	{
-//		std::cout << "ERROR! Resized image is empty\n";
-//		return img;
-//	}
-//
-//	// Predict using the neural network
-//	std::vector<float> prediction = neuralNetwork.Predict(resizedImg);
-//
-//	// Draw rectangles around detected people (example logic)
-//	for (const auto& rect : bodies)
-//	{
-//		cv::Scalar color(255, 0, 255);
-//		DrawRectangle(resizedImg, rect, color);
-//	}
-//
-//	return resizedImg;
-//}

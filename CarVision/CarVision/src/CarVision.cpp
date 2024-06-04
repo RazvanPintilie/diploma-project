@@ -13,17 +13,17 @@ int main()
 
 	ImageProcessor imageProcessor;
 
-	/*std::vector<cv::Mat> images = imageProcessor.GetImagesFromFolder(iamgesFolderPath);
-	int index = 0;
-	for (const auto& image : images)
-	{
-		std::string windowName = "Image " + std::to_string(++index);
+	//std::vector<cv::Mat> images = imageProcessor.GetImagesFromFolder(iamgesFolderPath);
+	//int index = 0;
+	//for (const auto& image : images)
+	//{
+	//	std::string windowName = "Image " + std::to_string(++index);
 
-		cv::Mat processedImage = imageProcessor.ProcessImage(image, ResolutionType::SVGA, true);
+	//	cv::Mat processedImage = imageProcessor.ProcessImage(image, ResolutionType::SVGA, true);
 
-		 cv::namedWindow(windowName, cv::WINDOW_AUTOSIZE);
-		 cv::imshow(windowName, processedImage);
-	}*/
+	//	 cv::namedWindow(windowName, cv::WINDOW_AUTOSIZE);
+	//	 cv::imshow(windowName, processedImage);
+	//}
 
 	VideoPlayer videoPlayer(videoPath, ResolutionType::HD, imageProcessor);
 	videoPlayer.PlayVideo();

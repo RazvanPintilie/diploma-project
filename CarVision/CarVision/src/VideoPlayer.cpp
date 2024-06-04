@@ -1,3 +1,4 @@
+#include <future>
 #include "../inc/VideoPlayer.hpp"
 
 VideoPlayer::VideoPlayer(const std::string& videoPath, ResolutionType resolution, ImageProcessor imageProcessor)
@@ -33,8 +34,8 @@ int VideoPlayer::PlayVideo()
 		}
 
 		bool process = true;
-		// process only 1/3 of the frames
-		if ((framesCounter++) % 3 == 0)
+		// process only 1/6 of the frames
+		if ((framesCounter++) % 6 == 0)
 		{
 			process = true;
 		}
@@ -47,7 +48,7 @@ int VideoPlayer::PlayVideo()
 
 		// show live and wait for a key with timeout long enough to show images
 		cv::imshow("Live", processedFrame);
-		if (cv::waitKey(1) >= 0)
+		if (cv::waitKey(5) >= 0)
 		{
 			break;
 		}
