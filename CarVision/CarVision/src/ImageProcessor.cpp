@@ -4,16 +4,28 @@
 #include <opencv2/opencv.hpp>
 #include <fstream>
 
+// deploy this before
+// docker run -it --rm -p 9001:9001 roboflow/roboflow-inference-server-cpu
 std::vector<BBoxElement> ImageProcessor::RoboflowPredict(const cv::Mat& img)
 {
 	std::string imagePath = "resources/output/temp-img.jpg";
 	std::string predictionOutput = "resources/output/predictions.json";
+	std::string api_key = "waYDB2KU5ky1eK8Vid0O";
 	cv::imwrite(imagePath, img);
 
 	std::ofstream file;
 	file.open("DeployRoboflowModel.ps1");
 
-	std::string powershell = R"([System.Convert]::ToBase64String([System.IO.File]::ReadAllBytes(")" + imagePath + R"(")) | Out-File -Encoding ASCII -FilePath encoded_image.txt ; curl.exe -d @$PWD\encoded_image.txt "https://detect.roboflow.com/carvision-7imcs/2?api_key=waYDB2KU5ky1eK8Vid0O" | Out-File -Encoding ASCII -FilePath ")" + predictionOutput + R"(" ; Remove-Item encoded_image.txt)";
+	// std::string powershell = R"([System.Convert]::ToBase64String([System.IO.File]::ReadAllBytes(")" + imagePath + R"(")) | Out-File -Encoding ASCII -FilePath encoded_image.txt ; curl.exe -d @$PWD\encoded_image.txt "https://detect.roboflow.com/carvision-7imcs/2?api_key=waYDB2KU5ky1eK8Vid0O" | Out-File -Encoding ASCII -FilePath ")" + predictionOutput + R"(" ; Remove-Item encoded_image.txt)";
+	// std::string powershell = R"(inference infer -i test_image_0.jpg -m carvision-7imcs/2 --api-key waYDB2KU5ky1eK8Vid0O)";
+
+	std::string powershell = R"(
+    $imagePath = ")" + imagePath + R"("
+    $api_key = "waYDB2KU5ky1eK8Vid0O"
+    $predictionOutput = ")" + predictionOutput + R"("
+
+    inference infer -i $imagePath -m carvision-7imcs/2 --api-key $api_key | Select-Object -Skip 1 | ForEach-Object { $_ -replace "'", '"' } | Out-File -Encoding ASCII -FilePath ")" + predictionOutput + R"("
+)";
 
 	file << powershell << std::endl;
 	file.close();
@@ -151,7 +163,6 @@ cv::Mat ImageProcessor::ProcessImage(const cv::Mat& img, ResolutionType resoluti
 		cv::Rect rect = cv::Rect(elem.x - elem.width / 2, elem.y - elem.height / 2, elem.width, elem.height);
 
 		DrawRectangle(resizedImg, rect, color);
-
 	}
 
 	// Download processed image back to CPU

@@ -1,1 +1,7 @@
-[System.Convert]::ToBase64String([System.IO.File]::ReadAllBytes("resources/output/temp-img.jpg")) | Out-File -Encoding ASCII -FilePath encoded_image.txt ; curl.exe -d @$PWD\encoded_image.txt "https://detect.roboflow.com/carvision-7imcs/2?api_key=waYDB2KU5ky1eK8Vid0O" | Out-File -Encoding ASCII -FilePath "resources/output/predictions.json" ; Remove-Item encoded_image.txt
+
+    $imagePath = "resources/output/temp-img.jpg"
+    $api_key = "waYDB2KU5ky1eK8Vid0O"
+    $predictionOutput = "resources/output/predictions.json"
+
+    inference infer -i $imagePath -m carvision-7imcs/2 --api-key $api_key | Select-Object -Skip 1 | ForEach-Object { $_ -replace "'", '"' } | Out-File -Encoding ASCII -FilePath "resources/output/predictions.json"
+

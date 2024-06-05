@@ -52,6 +52,22 @@ int VideoPlayer::PlayVideo()
 		{
 			break;
 		}
+
+		//std::vector<int> vec;
+		//if (processedFrame.isContinuous()) 
+		//{
+		//	vec.assign((int*)processedFrame.datastart, (int*)processedFrame.dataend);
+		//}
+		//else {
+		//	for (int i = 0; i < processedFrame.rows; ++i) 
+		//  {
+		//		vec.insert(vec.end(), processedFrame.ptr<int>(i), processedFrame.ptr<int>(i) + processedFrame.cols);
+		//	}
+		//}
+
+		//std::cout << vec.size();
+
+		//cv::waitKey(0);
 	}
 
 	cap.release();
