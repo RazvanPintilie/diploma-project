@@ -23,8 +23,7 @@ std::vector<BBoxElement> ImageProcessor::RoboflowPredict(const cv::Mat& img)
     $imagePath = ")" + imagePath + R"("
     $api_key = "waYDB2KU5ky1eK8Vid0O"
     $predictionOutput = ")" + predictionOutput + R"("
-
-    inference infer -i $imagePath -m carvision-7imcs/2 --api-key $api_key | Select-Object -Skip 1 | ForEach-Object { $_ -replace "'", '"' } | Out-File -Encoding ASCII -FilePath ")" + predictionOutput + R"("
+	inference infer -i $imagePath -m carvision-7imcs/2 --api-key $api_key | Select-Object -Skip 1 | ForEach-Object { $_ -replace "'", '"' } | Out-File -Encoding ASCII -FilePath ")" + predictionOutput + R"("
 )";
 
 	file << powershell << std::endl;
@@ -41,7 +40,7 @@ std::vector<BBoxElement> ImageProcessor::ParsePredictions(const std::string& pre
 {
 	std::vector<BBoxElement> predictions;
 
-	JsonParser parser;
+	JsonParser parser("");
 	parser.ParseJson(predictionOutput);
 	predictions = parser.GetPredictions();
 
@@ -82,8 +81,8 @@ std::vector<cv::Mat> ImageProcessor::GetImagesFromFolder(const std::string& fold
 
 cv::Mat ImageProcessor::ProcessImage(const cv::Mat& img, ResolutionType resolution, bool predict)
 {
-	/*static int i = 0;
-	cv::imwrite("resources/output/img" + std::to_string(i++) + ".jpg", img);*/
+	// static int i = 0;
+	// cv::imwrite("resources/output/img" + std::to_string(i++) + ".jpg", img);
 
 	auto resolutionMap = ResolutionManager::CreateResolutionsMap();
 	cv::Size newSize(resolutionMap[resolution]);
@@ -110,15 +109,15 @@ cv::Mat ImageProcessor::ProcessImage(const cv::Mat& img, ResolutionType resoluti
 	cv::cuda::cvtColor(gpuImg, grayImg, cv::COLOR_BGR2GRAY);
 
 	// HOG descriptor with default people detector
-	//cv::Ptr<cv::cuda::HOG> hog = cv::cuda::HOG::create();
-	//hog->setSVMDetector(hog->getDefaultPeopleDetector());
+	// cv::Ptr<cv::cuda::HOG> hog = cv::cuda::HOG::create();
+	// hog->setSVMDetector(hog->getDefaultPeopleDetector());
 
 	//// Detect people in the image
-	//hog->detectMultiScale(grayImg, bodies);
+	// hog->detectMultiScale(grayImg, bodies);
 
 	// Draw rectangles around detected people
-	//for (const auto& rect : bodies)
-	//{
+	// for (const auto& rect : bodies)
+	// {
 	//	// b g r color
 	//	cv::Scalar magenta(255, 0, 255);
 	//	cv::Scalar yellow(0, 255, 255);
@@ -129,7 +128,7 @@ cv::Mat ImageProcessor::ProcessImage(const cv::Mat& img, ResolutionType resoluti
 
 
 	//	DrawRectangle(resizedImg, rect, color);
-	//}
+	// }
 
 	if (predict == true)
 	{

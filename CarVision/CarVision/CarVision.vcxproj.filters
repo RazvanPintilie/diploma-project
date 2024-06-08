@@ -30,6 +30,9 @@
     <ClCompile Include="src\JsonParser.cpp">
       <Filter>Resource Files</Filter>
     </ClCompile>
+    <ClCompile Include="train.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="inc\ImageProcessor.hpp">
@@ -42,6 +45,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="inc\JsonParser.hpp">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="inc\CNN.hpp">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

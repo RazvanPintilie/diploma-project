@@ -161,8 +161,10 @@
     <ClCompile Include="src\ImageProcessor.cpp" />
     <ClCompile Include="src\ResolutionManager.cpp" />
     <ClCompile Include="src\VideoPlayer.cpp" />
+    <ClCompile Include="train.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="inc\CNN.hpp" />
     <ClInclude Include="inc\JsonParser.hpp" />
     <ClInclude Include="inc\ImageProcessor.hpp" />
     <ClInclude Include="inc\ResolutionManager.hpp" />

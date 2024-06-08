@@ -2,10 +2,72 @@
 #include <fstream>
 #include <iostream>
 
+JsonParser::JsonParser(std::string filePath)
+{
+	this->filePath = filePath;
+}
+
+std::vector<std::pair<cv::Mat, std::vector<cv::Rect>>> JsonParser::loadDataFromJson(const std::string fileName)
+{
+	std::vector<std::pair<cv::Mat, std::vector<cv::Rect>>> result;
+
+	// Load JSON file and parse annotations
+	ParseCocoJson(this->filePath + fileName);
+
+	// Get parsed images and annotations
+	const auto& images = GetImages();
+	const auto& annotations = GetAnnotations();
+
+	// Map to store image file paths with corresponding bounding boxes
+	std::map<int, std::vector<cv::Rect>> imageIdToBBoxesMap;
+
+	for (const auto& annotation : annotations)
+	{
+		std::cout << "Annotation - Image ID: " << annotation.imageId << ", Category ID: " << annotation.categoryId
+			<< ", BBox: [" << annotation.bbox.x << ", " << annotation.bbox.y << ", " << annotation.bbox.width << ", " << annotation.bbox.height << "]\n";
+
+		cv::Rect rect = cv::Rect(annotation.bbox.x, annotation.bbox.y, annotation.bbox.width, annotation.bbox.height);
+		imageIdToBBoxesMap[annotation.imageId].push_back(rect);
+	}
+
+	// Iterate through images and load them with their bounding boxes
+	for (const auto& image : images)
+	{
+		std::string imagePath = GetImageFilePath(image.id);
+		if (!imagePath.empty())
+		{
+			cv::Mat img = cv::imread(imagePath);
+			if (!img.empty())
+			{
+				result.emplace_back(img, imageIdToBBoxesMap[image.id]);
+			}
+			else
+			{
+				std::cerr << "Error loading image: " << imagePath << std::endl;
+			}
+		}
+	}
+	   
+	// test the output
+	// for (const auto& r : result)
+	// {
+	// 	for (const auto& rect : r.second)
+	// 	{
+	// 		cv::Scalar color(0, 255, 255);
+	// 		cv::rectangle(r.first, rect.tl(), rect.br(), color, 2);
+	   
+	// 		cv::waitKey(0);
+	// 	}
+	// 	cv::imshow("ok", r.first);
+	// }
+
+	return result;
+}
+
 void JsonParser::ParseJson(const std::string& filename)
 {
 	std::ifstream file(filename);
-	if (!file.is_open()) 
+	if (!file.is_open())
 	{
 		std::cerr << "Error opening JSON file: " << filename << std::endl;
 		return;
@@ -70,7 +132,7 @@ std::string JsonParser::GetImageFilePath(int imageId) const
 	{
 		if (img.id == imageId)
 		{
-			return img.fileName;
+			return this->filePath + img.fileName;
 		}
 	}
 	return ""; // Return empty string if image ID is not found
