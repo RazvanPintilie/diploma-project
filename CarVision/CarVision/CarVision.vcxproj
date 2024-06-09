@@ -86,8 +86,8 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
     <LinkIncremental>false</LinkIncremental>
     <ExecutablePath>$(ExecutablePath)</ExecutablePath>
-    <LibraryPath>C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.6\lib\x64;C:\OpenCvWithCuda\build\install\x64\vc16\lib;$(LibraryPath)</LibraryPath>
-    <IncludePath>C:\OpenCvWithCuda\build\install\include;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.6\include;$(IncludePath)</IncludePath>
+    <LibraryPath>C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.6\lib\x64;C:\OpenCvWithCuda\build\install\x64\vc16\lib;C:\Program Files (x86)\Intel\oneAPI\mkl\latest\lib;$(LibraryPath)</LibraryPath>
+    <IncludePath>C:\OpenCvWithCuda\build\install\include;C:\Program Files (x86)\Intel\oneAPI\mkl\latest\include;C:\Program Files\NVIDIA GPU Computing Toolkit\CUDA\v11.6\include;$(IncludePath)</IncludePath>
   </PropertyGroup>
   <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
     <ClCompile>
@@ -137,17 +137,18 @@
       <FunctionLevelLinking>true</FunctionLevelLinking>
       <IntrinsicFunctions>true</IntrinsicFunctions>
       <SDLCheck>true</SDLCheck>
-      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;MKL_ILP64;%(PreprocessorDefinitions)</PreprocessorDefinitions>
       <ConformanceMode>true</ConformanceMode>
       <AdditionalIncludeDirectories>C:\OpenCvWithCuda\nlohmann-json\include;C:\OpenCvWithCuda\libtorch\include;C:\OpenCvWithCuda\libtorch\include\torch\csrc\api\include;%(AdditionalIncludeDirectories)</AdditionalIncludeDirectories>
       <LanguageStandard>stdcpp17</LanguageStandard>
+      <RuntimeLibrary>MultiThreadedDLL</RuntimeLibrary>
     </ClCompile>
     <Link>
       <SubSystem>Console</SubSystem>
       <EnableCOMDATFolding>true</EnableCOMDATFolding>
       <OptimizeReferences>true</OptimizeReferences>
       <GenerateDebugInformation>true</GenerateDebugInformation>
-      <AdditionalDependencies>opencv_world454.lib;cudart.lib;cublas.lib;curand.lib;cudnn.lib;torch.lib;torch_cpu.lib;torch_cuda.lib;c10.lib;c10_cuda.lib;caffe2_nvrtc.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>opencv_world454.lib;cudart.lib;cublas.lib;curand.lib;cudnn.lib;torch.lib;torch_cpu.lib;torch_cuda.lib;c10.lib;c10_cuda.lib;caffe2_nvrtc.lib;mkl_intel_lp64.lib;mkl_sequential.lib;mkl_core.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <AdditionalLibraryDirectories>C:\OpenCvWithCuda\libtorch\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
     </Link>
     <PostBuildEvent>

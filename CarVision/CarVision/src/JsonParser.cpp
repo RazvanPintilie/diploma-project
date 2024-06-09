@@ -23,8 +23,8 @@ std::vector<std::pair<cv::Mat, std::vector<cv::Rect>>> JsonParser::loadDataFromJ
 
 	for (const auto& annotation : annotations)
 	{
-		std::cout << "Annotation - Image ID: " << annotation.imageId << ", Category ID: " << annotation.categoryId
-			<< ", BBox: [" << annotation.bbox.x << ", " << annotation.bbox.y << ", " << annotation.bbox.width << ", " << annotation.bbox.height << "]\n";
+		// std::cout << "Annotation - Image ID: " << annotation.imageId << ", Category ID: " << annotation.categoryId
+		//	<< ", BBox: [" << annotation.bbox.x << ", " << annotation.bbox.y << ", " << annotation.bbox.width << ", " << annotation.bbox.height << "]\n";
 
 		cv::Rect rect = cv::Rect(annotation.bbox.x, annotation.bbox.y, annotation.bbox.width, annotation.bbox.height);
 		imageIdToBBoxesMap[annotation.imageId].push_back(rect);

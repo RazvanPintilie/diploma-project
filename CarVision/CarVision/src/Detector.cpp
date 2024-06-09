@@ -8,23 +8,41 @@ Detector::Detector()
 
 }
 
-void Detector::Initialize(int gpu_id, int width, int height,
-	std::string name_list_path) {
-	if (gpu_id >= 0) {
-		if (gpu_id >= torch::getNumGPUs()) {
+void Detector::Initialize(int gpu_id, int width, int height, std::string name_list_path)
+{
+	std::cout << "Number of GPUs available: " << torch::getNumGPUs() << std::endl;
+
+	if (torch::cuda::is_available()) 
+	{
+		std::cout << "CUDA is available!" << std::endl;
+	}
+	else
+	{
+		std::cout << "CUDA is not available." << std::endl;
+	}
+
+	if (gpu_id >= 0)
+	{
+		if (gpu_id >= torch::getNumGPUs())
+		{
 			std::cout << "No GPU id " << gpu_id << " abailable" << std::endl;
 		}
-		device = torch::Device(torch::kCUDA, gpu_id);
+		else
+		{
+			device = torch::Device(torch::kCUDA, gpu_id);
+		}
 	}
-	else {
+	else
+	{
 		device = torch::Device(torch::kCPU);
 	}
+
 	name_list = {};
 	std::ifstream ifs;
 	ifs.open(name_list_path, std::ios::in);
 	if (!ifs.is_open())
 	{
-		std::cout<< "Open "<< name_list_path<<" file failed.";
+		std::cout << "Open " << name_list_path << " file failed.";
 		return;
 	}
 	std::string buf = "";
@@ -39,9 +57,10 @@ void Detector::Initialize(int gpu_id, int width, int height,
 
 	this->width = width;
 	this->height = height;
-	if (width % 32 || height % 32) {
+	if (width % 32 || height % 32)
+	{
 		std::cout << "Width or height is not divisible by 32" << std::endl;
-		return ;
+		return;
 	}
 
 	detector = YoloBody_tiny(3, num_classes);
@@ -50,7 +69,7 @@ void Detector::Initialize(int gpu_id, int width, int height,
 }
 
 
-void Detector::loadPretrained(std::string pretrained_pth) 
+void Detector::loadPretrained(std::string pretrained_pth)
 {
 	auto net_pretrained = YoloBody_tiny(3, 80);
 	torch::load(net_pretrained, pretrained_pth);
@@ -97,14 +116,14 @@ inline bool does_exist(const std::string& name)
 	return (stat(name.c_str(), &buffer) == 0);
 }
 
-void Detector::Train(std::string train_val_path, std::string image_type, int num_epochs, int batch_size,
-	float learning_rate, std::string save_path, std::string pretrained_path)
+void Detector::Train(std::string train_val_path, std::string image_type, int num_epochs, int batch_size, float learning_rate, std::string save_path, std::string pretrained_path)
 {
 	if (!does_exist(pretrained_path))
 	{
-		std::cout << "Pretrained path is invalid: " << pretrained_path <<"\t random initialzed the model"<< std::endl;
+		std::cout << "Pretrained path is invalid: " << pretrained_path << "\t random initialzed the model" << std::endl;
 	}
-	else {
+	else 
+	{
 		loadPretrained(pretrained_path);
 	}
 
@@ -120,7 +139,13 @@ void Detector::Train(std::string train_val_path, std::string image_type, int num
 	load_det_data_from_folder(train_label_path, image_type, list_images_train, list_labels_train);
 	load_det_data_from_folder(val_label_path, image_type, list_images_val, list_labels_val);
 
-	if (list_images_train.size() < batch_size || list_images_val.size() < batch_size) {
+	for (auto img : list_images_train)
+	{
+		std::cout << img << "\n";
+	}
+
+	if (list_images_train.size() < batch_size || list_images_val.size() < batch_size) 
+	{
 		std::cout << "Image numbers less than batch size or empty image folder" << std::endl;
 		return;
 	}
@@ -129,8 +154,8 @@ void Detector::Train(std::string train_val_path, std::string image_type, int num
 		std::cout << "Image path is invalid get first train image " << list_images_train[0] << std::endl;
 		return;
 	}
-	auto custom_dataset_train = DetDataset(list_images_train, list_labels_train, name_list, true,
-		width, height);
+
+	auto custom_dataset_train = DetDataset(list_images_train, list_labels_train, name_list, true, width, height);
 	auto custom_dataset_val = DetDataset(list_images_val, list_labels_val, name_list, false, width, height);
 	auto data_loader_train = torch::data::make_data_loader<torch::data::samplers::RandomSampler>(std::move(custom_dataset_train), batch_size);
 	auto data_loader_val = torch::data::make_data_loader<torch::data::samplers::RandomSampler>(std::move(custom_dataset_val), batch_size);
@@ -142,7 +167,7 @@ void Detector::Train(std::string train_val_path, std::string image_type, int num
 	bool normalize = false;
 	auto critia1 = YOLOLossImpl(anchors_, name_list.size(), image_size, 0.01, device, normalize);
 	auto critia2 = YOLOLossImpl(anchors_, name_list.size(), image_size, 0.01, device, normalize);
-	
+
 	auto pretrained_dict = detector->named_parameters();
 	auto FloatType = torch::ones(1).to(torch::kFloat).to(device).options();
 	for (int epoc_count = 0; epoc_count < num_epochs; epoc_count++) {
@@ -167,13 +192,15 @@ void Detector::Train(std::string train_val_path, std::string image_type, int num
 				}
 			}
 		}
-		else {
-			for (auto mm : pretrained_dict) {
+		else 
+		{
+			for (auto mm : pretrained_dict) 
+			{
 				mm.value().set_requires_grad(true);
 			}
 		}
 		detector->train();
-		for (auto& batch : *data_loader_train) 
+		for (auto& batch : *data_loader_train)
 		{
 			std::vector<torch::Tensor> images_vec = {};
 			std::vector<torch::Tensor> targets_vec = {};
@@ -204,7 +231,7 @@ void Detector::Train(std::string train_val_path, std::string image_type, int num
 		std::cout << std::endl;
 		detector->eval();
 		loss_sum = 0; batch_count = 0;
-		for (auto& batch : *data_loader_val) 
+		for (auto& batch : *data_loader_val)
 		{
 			std::vector<torch::Tensor> images_vec = {};
 			std::vector<torch::Tensor> targets_vec = {};
@@ -230,14 +257,15 @@ void Detector::Train(std::string train_val_path, std::string image_type, int num
 			std::cout << "Epoch: " << epoc_count << "," << " Valid Loss: " << loss_val << "\r";
 		}
 		printf("\n");
-		if (best_loss >= loss_val) {
+		if (best_loss >= loss_val)
+		{
 			best_loss = loss_val;
 			torch::save(detector, save_path);
 		}
 	}
 }
 
-void Detector::LoadWeight(std::string weight_path) 
+void Detector::LoadWeight(std::string weight_path)
 {
 	try
 	{
@@ -254,13 +282,16 @@ void Detector::LoadWeight(std::string weight_path)
 
 void show_bbox(cv::Mat image, torch::Tensor bboxes, std::vector<std::string> name_list)
 {
-
 	int font_face = cv::FONT_HERSHEY_COMPLEX;
 	double font_scale = 0.4;
 	int thickness = 1;
 	float* bbox = new float[bboxes.size(0)]();
 	std::cout << bboxes << std::endl;
-	if (bboxes.equal(torch::zeros_like(bboxes))) return;
+	if (bboxes.equal(torch::zeros_like(bboxes)))
+	{
+		std::cout << "no detection" << std::endl;
+		// return;
+	}
 	memcpy(bbox, bboxes.cpu().data_ptr(), bboxes.size(0) * sizeof(float));
 	for (int i = 0; i < bboxes.size(0); i = i + 7)
 	{
@@ -273,12 +304,13 @@ void show_bbox(cv::Mat image, torch::Tensor bboxes, std::vector<std::string> nam
 	}
 	delete bbox;
 	cv::imwrite("prediction.jpg", image);
-	cv::imshow("test", image);
+	cv::imshow("predicted", image);
+
 	cv::waitKey(0);
 	cv::destroyAllWindows();
 }
 
-void Detector::Predict(cv::Mat image, bool show, float conf_thresh, float nms_thresh) 
+void Detector::Predict(cv::Mat image, bool show, float conf_thresh, float nms_thresh)
 {
 	int origin_width = image.cols;
 	int origin_height = image.rows;
@@ -308,7 +340,7 @@ void Detector::Predict(cv::Mat image, bool show, float conf_thresh, float nms_th
 
 	float w_scale = float(origin_width) / width;
 	float h_scale = float(origin_height) / height;
-	for (int i = 0; i < detection.size(); i++) 
+	for (int i = 0; i < detection.size(); i++)
 	{
 		for (int j = 0; j < detection[i].size(0) / 7; j++)
 		{
@@ -320,7 +352,12 @@ void Detector::Predict(cv::Mat image, bool show, float conf_thresh, float nms_th
 	}
 
 	cv::resize(image, image, { origin_width,origin_height });
-	if(show)
+	if (show)
+	{
 		show_bbox(image, detection[0], name_list);
+		std::cout << "hmm" << std::endl;
+
+	}
+
 	return;
 }
