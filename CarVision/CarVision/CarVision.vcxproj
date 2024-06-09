@@ -157,17 +157,38 @@
   </ItemDefinitionGroup>
   <ItemGroup>
     <ClCompile Include="src\CarVision.cpp" />
+    <ClCompile Include="src\DetDataset.cpp" />
+    <ClCompile Include="src\Detector.cpp" />
     <ClCompile Include="src\JsonParser.cpp" />
     <ClCompile Include="src\ImageProcessor.cpp" />
+    <ClCompile Include="src\models\CSPdarknet53_tiny.cpp" />
+    <ClCompile Include="src\models\yolo4_tiny.cpp" />
+    <ClCompile Include="src\models\yolo_training.cpp" />
     <ClCompile Include="src\ResolutionManager.cpp" />
+    <ClCompile Include="src\train.cpp" />
+    <ClCompile Include="src\utils\Augmentations.cpp" />
+    <ClCompile Include="src\utils\tinystr.cpp" />
+    <ClCompile Include="src\utils\tinyxml.cpp" />
+    <ClCompile Include="src\utils\tinyxmlerror.cpp" />
+    <ClCompile Include="src\utils\tinyxmlparser.cpp" />
+    <ClCompile Include="src\utils\util.cpp" />
     <ClCompile Include="src\VideoPlayer.cpp" />
-    <ClCompile Include="train.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="inc\CNN.hpp" />
+    <ClInclude Include="inc\DetDataset.h" />
+    <ClInclude Include="inc\Detector.h" />
     <ClInclude Include="inc\JsonParser.hpp" />
     <ClInclude Include="inc\ImageProcessor.hpp" />
+    <ClInclude Include="inc\models\CSPdarknet53_tiny.h" />
+    <ClInclude Include="inc\models\yolo4_tiny.h" />
+    <ClInclude Include="inc\models\yolo_training.h" />
     <ClInclude Include="inc\ResolutionManager.hpp" />
+    <ClInclude Include="inc\utils\Augmentations.h" />
+    <ClInclude Include="inc\utils\readfile.h" />
+    <ClInclude Include="inc\utils\tinystr.h" />
+    <ClInclude Include="inc\utils\tinyxml.h" />
+    <ClInclude Include="inc\utils\util.h" />
+    <ClInclude Include="inc\utils\_dirent.h" />
     <ClInclude Include="inc\VideoPlayer.hpp" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
