@@ -17,12 +17,14 @@ struct AnnotationElement
 	int categoryId;
 	BBoxElement bbox;
 };
+
 struct ImageElement
 {
 	int id;
 	std::string fileName;
 	int height;
 	int width;
+	std::vector<AnnotationElement> annotations;
 };
 
 class JsonParser
@@ -33,6 +35,7 @@ public:
 	const std::vector<BBoxElement>& GetPredictions() const { return predictions; }
 
 	// Function to load images and annotations from JSON file
+	const std::vector<ImageElement>& GetImages() const { return images; }
 	std::vector<std::pair<cv::Mat, std::vector<cv::Rect>>> loadDataFromJson(const std::string fileName);
 
 private:
@@ -42,7 +45,6 @@ private:
 	std::vector<ImageElement> images;
 	std::vector<AnnotationElement> annotations;
 	void ParseCocoJson(const std::string& filename);
-	const std::vector<ImageElement>& GetImages() const { return images; }
 	const std::vector<AnnotationElement>& GetAnnotations() const { return annotations; }
 	std::string GetImageFilePath(int imageId) const;
 

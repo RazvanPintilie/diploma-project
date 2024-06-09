@@ -124,6 +124,18 @@ void JsonParser::ParseCocoJson(const std::string& filename)
 		annotation.bbox.height = ann["bbox"][3];
 		annotations.push_back(annotation);
 	}
+
+	// Update ImageElement with parsed annotations
+	for (auto& image : images)
+	{
+		for (const auto& annotation : annotations)
+		{
+			if (image.id == annotation.imageId)
+			{
+				image.annotations.push_back(annotation);
+			}
+		}
+	}
 }
 
 std::string JsonParser::GetImageFilePath(int imageId) const
